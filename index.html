@@ -1,16 +1,494 @@
 <!doctype html>
 <html lang="pt-br">
-
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/jpeg" href="/Farmateste.png?v=2" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Farma Dev</title>
+  <title>Farma Dev - Gerenciamento</title>
+  <style>
+    
+    .chat-floating-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #2c7da0 0%, #014f86 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+    }
+    
+    .chat-floating-btn:hover {
+      transform: scale(1.05);
+    }
+    
+    .chat-container {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 400px;
+      height: 500px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+      display: none;
+      flex-direction: column;
+    }
+    
+    .chat-header {
+      background: linear-gradient(135deg, #2c7da0 0%, #014f86 100%);
+      color: white;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .chat-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .chat-title h3 {
+      font-size: 16px;
+      margin: 0;
+    }
+    
+    .chat-messages {
+      padding: 15px;
+      flex-grow: 1;
+      overflow-y: auto;
+      background: #f9f9f9;
+    }
+    
+    .message {
+      margin-bottom: 12px;
+      display: flex;
+    }
+    
+    .bot-message {
+      justify-content: flex-start;
+    }
+    
+    .user-message {
+      justify-content: flex-end;
+    }
+    
+    .message-content {
+      padding: 10px 15px;
+      border-radius: 18px;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+    
+    .bot-message .message-content {
+      background: #e6f7ff;
+      border-bottom-left-radius: 5px;
+    }
+    
+    .user-message .message-content {
+      background: #dcf8c6;
+      border-bottom-right-radius: 5px;
+    }
+    
+    .suggested-questions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    
+    .question-btn {
+      background: #e6f7ff;
+      border: 1px solid #2c7da0;
+      border-radius: 15px;
+      padding: 8px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.3s;
+    }
+    
+    .question-btn:hover {
+      background: #ccefff;
+    }
+    
+    .chat-input {
+      display: flex;
+      padding: 15px;
+      border-top: 1px solid #eee;
+      background: white;
+    }
+    
+    .chat-input input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      outline: none;
+      font-size: 14px;
+    }
+    
+    .chat-input input:focus {
+      border-color: #2c7da0;
+    }
+    
+    .chat-input button {
+      background: #2c7da0;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 0 20px;
+      margin-left: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    
+    .chat-input button:hover {
+      background: #014f86;
+    }
+    
+    .status {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: #388e3c;
+    }
+    
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #388e3c;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+    
+    .close-chat {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .manager-info {
+      background: #fff8e6;
+      border-left: 4px solid #ffc107;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    
+    .metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    
+    .metric-box {
+      background: #f0f9ff;
+      border: 1px solid #b3e0ff;
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 12px;
+      text-align: center;
+    }
+    
+    .metric-value {
+      font-weight: bold;
+      font-size: 14px;
+      color: #014f86;
+    }
+    
+    .delivery-route {
+      background: #e6ffed;
+      border: 1px solid #a3d9b1;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    
+    .route-step {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+    
+    .route-bullet {
+      width: 8px;
+      height: 8px;
+      background: #28a745;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+    
+    .urgent {
+      color: #dc3545;
+      font-weight: bold;
+    }
+    
+    .positive {
+      color: #28a745;
+      font-weight: bold;
+    }
+    
+    .highlight {
+      background-color: #fffacd;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+  </style>
 </head>
 
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
-</body>
+  
+  <div class="chat-floating-btn" id="chatBtn">📊</div>
+  
+  <div class="chat-container" id="chatWindow">
+    <div class="chat-header">
+      <div class="chat-title">
+        <span>👔</span>
+        <h3>Assistente</h3>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="status">
+          <div class="status-dot"></div>
+          <span>Online</span>
+        </div>
+        <button class="close-chat" onclick="toggleChat()">×</button>
+      </div>
+    </div>
+    
+    <div class="chat-messages" id="chatMessages">
+      <div class="message bot-message">
+        <div class="message-content">
+          Bem vindo de volta! Como posso te auxiliar hoje?
+        </div>
+      </div>
+      <div class="message bot-message">
+        <div class="message-content">
+          <div>Posso fornecer:</div>
+          <div class="suggested-questions">
+            <button class="question-btn" onclick="sendSuggestedQuestion('Relatório de vendas de hoje')">• Relatório de vendas de hoje</button>
+            <button class="question-btn" onclick="sendSuggestedQuestion('Rotas de entrega')">• Rotas de entrega</button>
+            <button class="question-btn" onclick="sendSuggestedQuestion('Pedidos pendentes')">• Pedidos pendentes</button>
+            <button class="question-btn" onclick="sendSuggestedQuestion('Estoque crítico')">• Estoque crítico</button>
+            <button class="question-btn" onclick="sendSuggestedQuestion('Desempenho da equipe')">• Desempenho da equipe</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="chat-input">
+      <input type="text" placeholder="Digite sua consulta gerencial..." id="chatInput">
+      <button onclick="sendMessage()">Enviar</button>
+    </div>
+  </div>
 
+  <script>
+    // Dados de exemplo para o gerente (em um sistema real, viriam do backend)
+    const managerData = {
+      salesToday: {
+        total: 5276.83,
+        transactions: 42,
+        average: 125.64,
+        comparison: "+12.3%"
+      },
+      pendingOrders: 8,
+      deliveryRoutes: [
+        { area: "Zona Norte", deliveries: 5, status: "Em andamento" },
+        { area: "Zona Sul", deliveries: 3, status: "Aguardando" },
+        { area: "Centro", deliveries: 7, status: "Concluído" }
+      ],
+      criticalStock: [
+        { product: "Paracetamol 500mg", quantity: 12, min: 20 },
+        { product: "Dipirona 500mg", quantity: 15, min: 25 },
+        { product: "Omeprazol 20mg", quantity: 8, min: 15 }
+      ],
+      teamPerformance: [
+        { name: "João", sales: 1845.20, goals: 1500.00 },
+        { name: "Maria", sales: 2150.75, goals: 2000.00 },
+        { name: "Pedro", sales: 1280.88, goals: 1500.00 }
+      ],
+      popularProducts: [
+        { product: "Paracetamol", sales: 48 },
+        { product: "Shampoo Anticaspa", sales: 32 },
+        { product: "Vitamina C", sales: 29 }
+      ]
+    };
+
+    // Função para alternar a visibilidade do chat
+    function toggleChat() {
+      const chatWindow = document.getElementById('chatWindow');
+      chatWindow.style.display = chatWindow.style.display === 'none' ? 'flex' : 'none';
+    }
+    
+    // Adicionar evento de clique ao botão flutuante
+    document.getElementById('chatBtn').addEventListener('click', toggleChat);
+    
+    // Função para enviar perguntas sugeridas
+    function sendSuggestedQuestion(question) {
+      document.getElementById('chatInput').value = question;
+      sendMessage();
+    }
+    
+    // Função para enviar mensagem
+    function sendMessage() {
+      const chatInput = document.getElementById('chatInput');
+      const chatMessages = document.getElementById('chatMessages');
+      const message = chatInput.value.trim();
+      
+      if (message) {
+        // Adicionar mensagem do usuário
+        const userMsg = document.createElement('div');
+        userMsg.className = 'message user-message';
+        userMsg.innerHTML = '<div class="message-content">' + message + '</div>';
+        chatMessages.appendChild(userMsg);
+        
+        // Limpar input
+        chatInput.value = '';
+        
+        // Resposta automática baseada nas palavras-chave
+        setTimeout(() => {
+          const botMsg = document.createElement('div');
+          botMsg.className = 'message bot-message';
+          
+          let response = '';
+          
+          // Respostas específicas para o gerente
+          if (message.toLowerCase().includes('venda') || message.toLowerCase().includes('vendas') || 
+              message.toLowerCase().includes('financeiro') || message.toLowerCase().includes('faturamento')) {
+            response = `
+              <div>📊 <strong>Relatório de Vendas - Hoje</strong></div>
+              <div class="metrics">
+                <div class="metric-box">Total: <span class="metric-value">R$ ${managerData.salesToday.total.toFixed(2)}</span></div>
+                <div class="metric-box">Transações: <span class="metric-value">${managerData.salesToday.transactions}</span></div>
+                <div class="metric-box">Ticket Médio: <span class="metric-value">R$ ${managerData.salesToday.average.toFixed(2)}</span></div>
+                <div class="metric-box">Vs. Ontem: <span class="metric-value positive">${managerData.salesToday.comparison}</span></div>
+              </div>
+              <div class="manager-info">
+                💡 <strong>Produtos mais vendidos hoje:</strong><br>
+                1. ${managerData.popularProducts[0].product} (${managerData.popularProducts[0].sales} unidades)<br>
+                2. ${managerData.popularProducts[1].product} (${managerData.popularProducts[1].sales} unidades)<br>
+                3. ${managerData.popularProducts[2].product} (${managerData.popularProducts[2].sales} unidades)
+              </div>
+            `;
+          
+          } else if (message.toLowerCase().includes('rota') || message.toLowerCase().includes('entrega') || 
+                     message.toLowerCase().includes('delivery') || message.toLowerCase().includes('entregas')) {
+            response = `
+              <div>🚚 <strong>Rotas de Entrega - Status</strong></div>
+              <div class="delivery-route">
+                ${managerData.deliveryRoutes.map(route => `
+                  <div class="route-step">
+                    <div class="route-bullet"></div>
+                    <div>${route.area}: ${route.deliveries} entregas - <span class="highlight">${route.status}</span></div>
+                  </div>
+                `).join('')}
+              </div>
+              <div class="manager-info">
+                ⏱️ <strong>Total de entregas pendentes:</strong> ${managerData.pendingOrders}
+              </div>
+            `;
+          
+          } else if (message.toLowerCase().includes('pedido') || message.toLowerCase().includes('pendente')) {
+            response = `
+              <div>⏳ <strong>Pedidos Pendentes</strong></div>
+              <div>Atualmente existem <span class="metric-value">${managerData.pendingOrders}</span> pedidos pendentes de processamento.</div>
+              <div class="manager-info">
+                💡 Recomendo priorizar a revisão dos pedidos com mais de 2 horas de espera.
+              </div>
+            `;
+          
+          } else if (message.toLowerCase().includes('estoque') || message.toLowerCase().includes('crítico') || 
+                     message.toLowerCase().includes('faltante')) {
+            response = `
+              <div>⚠️ <strong>Estoque Crítico</strong></div>
+              <div>Produtos com estoque abaixo do mínimo:</div>
+              ${managerData.criticalStock.map(item => `
+                <div class="manager-info urgent">
+                  • ${item.product}: ${item quantity} unidades (mínimo: ${item.min})
+                </div>
+              `).join('')}
+            `;
+          
+          } else if (message.toLowerCase().includes('equipe') || message.toLowerCase().includes('desempenho') || 
+                     message.toLowerCase().includes('time') || message.toLowerCase().includes('vendedor')) {
+            response = `
+              <div>👥 <strong>Desempenho da Equipe - Hoje</strong></div>
+              ${managerData.teamPerformance.map(member => `
+                <div class="metric-box">
+                  ${member.name}: R$ ${member.sales.toFixed(2)} | Meta: R$ ${member.goals.toFixed(2)}
+                  <div>${member.sales >= member.goals ? '✅' : '⚠️'}</div>
+                </div>
+              `).join('')}
+            `;
+          
+          } else if (message.toLowerCase().includes('meta') || message.toLowerCase().includes('objetivo')) {
+            response = `
+              <div>🎯 <strong>Metas do Dia</strong></div>
+              <div class="manager-info">
+                • Meta de vendas: R$ 6.000,00<br>
+                • Progresso atual: <span class="metric-value">${((managerData.salesToday.total / 6000) * 100).toFixed(1)}%</span><br>
+                • Restante: R$ ${(6000 - managerData.salesToday.total).toFixed(2)}
+              </div>
+            `;
+          
+          } else {
+            response = `
+              Olá, Gerente! Posso ajudar com:<br><br>
+              • <strong>Relatórios de vendas</strong> e desempenho financeiro<br>
+              • <strong>Rotas de entrega</strong> e status de pedidos<br>
+              • <strong>Gestão de estoque</strong> e alertas de produtos críticos<br>
+              • <strong>Desempenho da equipe</strong> e metas<br>
+              • <strong>Análises</strong> e insights gerenciais
+              <div class="manager-info">
+                💡 Experimente perguntar sobre "vendas de hoje", "rotas de entrega" ou "estoque crítico"
+              </div>
+            `;
+          }
+          
+          botMsg.innerHTML = '<div class="message-content">' + response + '</div>';
+          chatMessages.appendChild(botMsg);
+          
+          // Rolagem automática
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 1000);
+        
+        // Rolagem automática
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    }
+    
+    // Permitir enviar com Enter
+    document.getElementById('chatInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
 </html>

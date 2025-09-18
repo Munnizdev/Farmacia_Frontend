@@ -4,9 +4,7 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   background-color: #cad5e2;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -20,4 +18,206 @@ body {
 
 a {
   text-decoration: none;
+}
+
+.chatbot-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 350px;
+  height: 500px;
+  z-index: 1000;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.react-chatbot-kit-chat-header {
+  background-color: #376B7E;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.react-chatbot-kit-chat-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.react-chatbot-kit-chat-inner-container {
+  height: 100%;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.react-chatbot-kit-chat-input-container {
+  padding: 10px;
+  background-color: #fff;
+  border-top: 1px solid #eee;
+}
+
+.react-chatbot-kit-chat-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  outline: none;
+  font-size: 14px;
+}
+
+.react-chatbot-kit-chat-input-form {
+  display: flex;
+  align-items: center;
+}
+
+.react-chatbot-kit-chat-input::placeholder {
+  color: #999;
+}
+
+.react-chatbot-kit-chat-btn-send {
+  background-color: #376B7E;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-left: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.react-chatbot-kit-chat-btn-send:hover {
+  background-color: #2a5466;
+}
+
+.react-chatbot-kit-chat-message-container {
+  padding: 15px;
+  height: 100%;
+  overflow-y: auto;
+  background-color: #f5f5f5;
+  scrollbar-width: thin;
+}
+
+.react-chatbot-kit-chat-message-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.react-chatbot-kit-chat-message-container::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1;
+  border-radius: 3px;
+}
+
+.react-chatbot-kit-chat-bot-message-container {
+  display: flex;
+  margin: 15px 0;
+  justify-content: flex-start;
+}
+
+.react-chatbot-kit-chat-bot-avatar-container {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #376B7E;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.react-chatbot-kit-chat-bot-avatar-icon {
+  width: 20px;
+  height: 20px;
+  fill: white;
+}
+
+.react-chatbot-kit-chat-bot-message {
+  background-color: #376B7E;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 18px;
+  border-bottom-left-radius: 4px;
+  max-width: 70%;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.react-chatbot-kit-user-chat-message-container {
+  display: flex;
+  margin: 15px 0;
+  justify-content: flex-end;
+}
+
+.react-chatbot-kit-user-chat-message {
+  background-color: #e5e7eb;
+  color: #333;
+  padding: 12px 16px;
+  border-radius: 18px;
+  border-bottom-right-radius: 4px;
+  max-width: 70%;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.react-chatbot-kit-chat-input::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .chatbot-container {
+    width: 300px;
+    height: 400px;
+    bottom: 10px;
+    right: 10px;
+  }
+  
+  .react-chatbot-kit-chat-message-container {
+    padding: 10px;
+  }
+  
+  .react-chatbot-kit-chat-bot-message,
+  .react-chatbot-kit-user-chat-message {
+    max-width: 80%;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+  
+  .react-chatbot-kit-chat-header {
+    padding: 12px;
+    font-size: 14px;
+  }
+  
+  .react-chatbot-kit-chat-input {
+    padding: 10px;
+    font-size: 13px;
+  }
+}
+
+.react-chatbot-kit-chat-btn-send:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.react-chatbot-kit-chat-bot-message,
+.react-chatbot-kit-user-chat-message {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
