@@ -37,4 +37,4 @@ Componentização para reutilização de código
 
 Responsividade com TailwindCSS
 
-Testes de interface com Jest/React Testing Library (opcional)
+Testes de interface com Jest/React Testing Library
